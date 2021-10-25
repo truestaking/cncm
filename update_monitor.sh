@@ -271,7 +271,7 @@ TELEGRAM_USER="";
 if get_answer "Do you want to receive node alerts via Telegram?"
     then echo;
     TELEGRAM_USER=$(get_input_default "Please enter your telegram username " $TELEGRAM_USER)
-    echo "IMPORTANT: Please enter a telegram chat with our bot and message 'hi!' LINK: https://t.me/cardanoccm_bot"
+    echo "IMPORTANT: Please enter a telegram chat with our bot and message 'hi!' LINK: https://t.me/cardanocncm_bot"
     echo "IMPORTANT: Even if you have messaged our bot before, you must message him again"
     read -p "After you say "hi" to the cncm bot press <enter>."; echo
     else TELEGRAM_USER=''
@@ -284,7 +284,7 @@ fi
 if ! ( [[ $EMAIL_USER =~ [\@] ]] || [[ $TELEGRAM_USER =~ [a-zA-Z0-9] ]] )
 then
   logger "CNCM requires either email or telegram for alerting, bailing out of setup."  
-  echo "CNCM requires either email or telegram for alerting. Rerun setup to provide email or telegram alerting.Bailing out."
+  echo "CNCM requires either email or telegram for alerting. Rerun setup to provide email or telegram alerting. Bailing out."
   exit
 fi
 

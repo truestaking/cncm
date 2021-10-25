@@ -7,8 +7,6 @@ then
     logger "CNCM cannot find $FILE -- does not exist"
     exit;
 fi
-#get hostname
-HOST=$(hostname -f)
 source ./env
 
 # get number of cores

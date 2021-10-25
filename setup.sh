@@ -79,7 +79,7 @@ cat << "EOF"
 
  
 
-Cardano Collator Community Monitoring
+Cardano Node Community Monitoring
 
 Basic -> just the stuff you need near time alerting on
 
@@ -225,7 +225,7 @@ TELEGRAM_USER="";
 if get_answer "Do you want to receive node alerts via Telegram?"
     then echo;
     TELEGRAM_USER=$(get_input "Please enter your telegram username ")
-    echo "IMPORTANT: Please enter a telegram chat with our bot and message 'hi!' LINK: https://t.me/cardanoccm_bot"
+    echo "IMPORTANT: Please enter a telegram chat with our bot and message 'hi!' LINK: https://t.me/cardanoncncm_bot"
     echo "IMPORTANT: Even if you have messaged our bot before, you must message him again"
     read -p "After you say "hi" to the cncm bot press <enter>."; echo
     else TELEGRAM_USER=''
@@ -238,7 +238,7 @@ fi
 if ! ( [[ $EMAIL_USER =~ [\@] ]] || [[ $TELEGRAM_USER =~ [a-zA-Z0-9] ]] )
 then
   logger "CNCM requires either email or telegram for alerting, bailing out of setup."  
-  echo "CNCM requires either email or telegram for alerting. Rerun setup to provide email or telegram alerting.Bailing out."
+  echo "CNCM requires either email or telegram for alerting. Rerun setup to provide email or telegram alerting. Bailing out."
   exit
 fi
 
@@ -299,4 +299,3 @@ echo "Here is the API key for this server: $API_KEY"
 echo "You can also find it in $DEST/env"
 echo "WARNING: you need this key to update or remove this account, so please store it safely!"
 echo "##########################################"
-

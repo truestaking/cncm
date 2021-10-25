@@ -3,7 +3,7 @@ brought to you by [True Staking](https://truestaking.com)
 
 ## What is it?
 
-Just basic Linux server monitoring. Sometimes, the simplest solution is the best solution. For all the trends, graphs, metrics, statistics you might need, there is Prometheus. For knowing your server has no issues, there is MCCM.
+Just basic Linux server monitoring. Sometimes, the simplest solution is the best solution. For all the trends, graphs, metrics, statistics you might need, there is Prometheus. For knowing your server has no issues, there is CNCM.
 
 Server checks include:
 - node service status
