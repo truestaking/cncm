@@ -1,0 +1,10 @@
+[Unit]
+Description="Cardano Node Community Monitor"
+Requires=cncm.service
+
+[Timer]
+Unit=cncm.service
+OnCalendar=*:00/2:00
+
+[Install]
+WantedBy=timers.target

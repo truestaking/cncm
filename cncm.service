@@ -1,0 +1,10 @@
+[Unit]
+Description="Cardano Node Community Monitor"
+Wants=mccm.timer
+
+[Service]
+Type=oneshot
+ExecStart=/opt/cardano/cncm/monitor.sh
+
+[Install]
+WantedBy=multi-user.target
