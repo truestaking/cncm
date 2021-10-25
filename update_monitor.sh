@@ -267,7 +267,6 @@ fi
 echo
 
 #### alert via TG ####
-TELEGRAM_USER="";
 if get_answer "Do you want to receive node alerts via Telegram?"
     then echo;
     TELEGRAM_USER=$(get_input_default "Please enter your telegram username " $TELEGRAM_USER)

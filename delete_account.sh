@@ -69,7 +69,7 @@ if get_answer "Do you want to remove server account $API_KEY? "
       sudo systemctl disable cncm.service
       sudo rm /etc/systemd/system/cncm.timer
       sudo rm /etc/systemd/system/cncm.service
-      sudo rm -rf /opt/moonbeam/cncm
+      sudo rm -rf /opt/cardano/cncm
       echo "Successs! CNCM account has been removed and the installation removed. "
     else
         echo "error was: $RESP"
