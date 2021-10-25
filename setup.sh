@@ -1,7 +1,7 @@
 #!/bin/bash
 
-REPO='https://raw.githubusercontent.com/truestaking/mccm/main'
-DEST='/opt/moonbeam/mccm'
+REPO='https://raw.githubusercontent.com/truestaking/cncm/main'
+DEST='/opt/cardano/cncm'
 
 ################################
 #### CONVENIENCE FUNCTIONS #####
@@ -29,18 +29,17 @@ get_answer() {
 
 write_env() {
   echo -ne "
-##### MCCM user variables #####
-### Uncomment the next line to set your own peak_load_avg value or leave it undefined to use the MCCM default
+##### CNCM user variables #####
+### Uncomment the next line to set your own peak_load_avg value or leave it undefined to use the CNCM default
 #peak_load_avg=
 
-##### END MCCM user variables #####
+##### END CNCM user variables #####
 
 #### DO NOT EDIT BELOW THIS LINE! #####
 #### TO EDIT THESE VARIABLES, RUN update_monitor.sh ####
 #### DO NOT COPY THIS FILE or edit the API KEY ####
 API_KEY=$API_KEY
 NAME=$NAME
-MONITOR_PRODUCING_BLOCKS=$MONITOR_PRODUCING_BLOCKS
 MONITOR_PROCESS=$MONITOR_PROCESS
 MONITOR_CPU=$MONITOR_CPU
 MONITOR_OOM_CONDITION=$MONITOR_OOM_CONDITION
@@ -50,7 +49,6 @@ MONITOR_NVME_LIFESPAN=$MONITOR_NVME_LIFESPAN
 MONITOR_NVME_SELFTEST=$MONITOR_NVME_SELFTEST
 EMAIL_USER=$EMAIL_USER
 TELEGRAM_USER=$TELEGRAM_USER
-COLLATOR_ADDRESS=$COLLATOR_ADDRESS
 ACTIVE=$ACTIVE
 " > $DEST/env
 }
@@ -61,18 +59,19 @@ ACTIVE=$ACTIVE
 
 echo; echo
 cat << "EOF"
- #   #                       #                                   ###           ##     ##            #                  
- ## ##   ###    ###   # ##   ####    ###    ####  ## #          #   #   ###     #      #     ####  ####    ###   # ##  
- # # #  #   #  #   #  ##  #  #   #  #####  #   #  # # #         #      #   #    #      #    #   #   #     #   #  ##    
- # # #  #   #  #   #  #   #  #   #  #      #  ##  # # #         #   #  #   #    #      #    #  ##   #     #   #  #     
- #   #   ###    ###   #   #  ####    ###    ## #  #   #          ###    ###    ###    ###    ## #    ##    ###   #     
-                                                                                                                       
-  ###                                        #     #                   #   #                  #     #                     #                 
- #   #   ###   ## #   ## #   #   #  # ##          ####   #   #         ## ##   ###   # ##          ####    ###   # ##          # ##    #### 
- #      #   #  # # #  # # #  #   #  ##  #    #     #     #   #         # # #  #   #  ##  #    #     #     #   #  ##       #    ##  #  #   # 
- #   #  #   #  # # #  # # #  #  ##  #   #    #     #      ####         # # #  #   #  #   #    #     #     #   #  #        #    #   #   #### 
-  ###    ###   #   #  #   #   ## #  #   #    #      ##       #         #   #   ###   #   #    #      ##    ###   #        #    #   #      # 
-                                                          ###                                                                          ###  
+   _____              _                     _   _           _                                                
+  / ____|            | |                   | \ | |         | |                                               
+ | |     __ _ _ __ __| | __ _ _ __   ___   |  \| | ___   __| | ___                                           
+ | |    / _` | '__/ _` |/ _` | '_ \ / _ \  | . ` |/ _ \ / _` |/ _ \                                          
+ | |___| (_| | | | (_| | (_| | | | | (_) | | |\  | (_) | (_| |  __/                                          
+  \_____\__,_|_|  \__,_|\__,_|_| |_|\___/  |_|_\_|\___/ \__,_|\___|            _ _             _             
+  / ____|                                    (_) |         |  \/  |           (_) |           (_)            
+ | |     ___  _ __ ___  _ __ ___  _   _ _ __  _| |_ _   _  | \  / | ___  _ __  _| |_ ___  _ __ _ _ __   __ _ 
+ | |    / _ \| '_ ` _ \| '_ ` _ \| | | | '_ \| | __| | | | | |\/| |/ _ \| '_ \| | __/ _ \| '__| | '_ \ / _` |
+ | |___| (_) | | | | | | | | | | | |_| | | | | | |_| |_| | | |  | | (_) | | | | | || (_) | |  | | | | | (_| |
+  \_____\___/|_| |_| |_|_| |_| |_|\__,_|_| |_|_|\__|\__, | |_|  |_|\___/|_| |_|_|\__\___/|_|  |_|_| |_|\__, |
+                                                     __/ |                                              __/ |
+                                                    |___/                                              |___/ 
 EOF
 echo; echo;
 cat << "EOF"
@@ -80,15 +79,14 @@ cat << "EOF"
 
  
 
-Moonbeam Collator Community Monitoring
+Cardano Collator Community Monitoring
 
 Basic -> just the stuff you need near time alerting on
 
 Simple -> just standard Linux command line tools
 
 Essential -> everything you need, nothing more
-    - block production warning
-    - collator service status
+    - node service status
     - out of memory error condition
     - loss of network connectivity
     - disk space
@@ -99,12 +97,11 @@ Free -> backend alerting contributed by True Staking
 
 You will need:
     1.  your telegram user name or email address
-    2.  your collator public address (if you wish to monitor block production)
 
 EOF
 echo;echo
 
-if ! get_answer "Do you wish to install and configure MCCM?"; then exit; fi
+if ! get_answer "Do you wish to install and configure CNCM?"; then exit; fi
 echo; echo
 
 
@@ -125,22 +122,11 @@ else echo
 fi
 echo
 
-#### is the collator producing blocks? ####
-COLLATOR_ADDRESS=''
-if get_answer "Do you want to be alerted if your node has failed to produce a block in the normal time window? "
-    then MONITOR_PRODUCING_BLOCKS=true
-    echo
-    COLLATOR_ADDRESS=$(get_input "Please enter your node public address. Paste and press <ENTER> ")
-    else MONITOR_PRODUCING_BLOCKS=false
-    echo
-fi
-echo
-
-#### is the collator process still running? ####
-if get_answer "Do you want to be alerted if your collator service stops running?"
+#### is the node process still running? ####
+if get_answer "Do you want to be alerted if your node service stops running?"
     then 
 	echo
-        service=$(get_input "Please enter the service name you want to monitor? This is usually moonriver or moonbeam")
+        service=$(get_input "Please enter the service name you want to monitor? This is usually cnode")
         if (sudo systemctl -q is-active $service)
             then MONITOR_PROCESS=$service
             else
@@ -210,7 +196,7 @@ if echo $MONITOR_NVME_HEAT,$MONITOR_NVME_LIFESPAN,$MONITOR_NVME_SELFTEST | grep 
                 echo "installing nvme-cli.."
                 if ! sudo apt install nvme-cli
                 then echo;
-                    echo "MCCM setup failed to install nvme-cli. Please manually install nvme-cli and rerun setup."
+                    echo "CNCM setup failed to install nvme-cli. Please manually install nvme-cli and rerun setup."
                 echo; echo
                 fi
         fi
@@ -219,7 +205,7 @@ if echo $MONITOR_NVME_HEAT,$MONITOR_NVME_LIFESPAN,$MONITOR_NVME_SELFTEST | grep 
                 echo "installing smartmontools..."
                 if ! sudo apt install smartmontools
                 then echo
-                    echo "MCCM setup failed to install smartmontools. Please manually install nvme-cli and rerun setup."
+                    echo "CNCM setup failed to install smartmontools. Please manually install nvme-cli and rerun setup."
                     echo; echo
                 fi
         fi
@@ -227,7 +213,7 @@ if echo $MONITOR_NVME_HEAT,$MONITOR_NVME_LIFESPAN,$MONITOR_NVME_SELFTEST | grep 
 fi
 
 #### alert via email? ####
-if get_answer "Do you want to receive collator alerts via email?" 
+if get_answer "Do you want to receive node alerts via email?" 
     then echo;
     EMAIL_USER=$(get_input "Please enter an email address for receiving alerts ")
     else EMAIL_USER=''
@@ -236,12 +222,12 @@ echo
 
 #### alert via TG ####
 TELEGRAM_USER="";
-if get_answer "Do you want to receive collator alerts via Telegram?"
+if get_answer "Do you want to receive node alerts via Telegram?"
     then echo;
     TELEGRAM_USER=$(get_input "Please enter your telegram username ")
-    echo "IMPORTANT: Please enter a telegram chat with our bot and message 'hi!' LINK: https://t.me/moonbeamccm_bot"
+    echo "IMPORTANT: Please enter a telegram chat with our bot and message 'hi!' LINK: https://t.me/cardanoccm_bot"
     echo "IMPORTANT: Even if you have messaged our bot before, you must message him again"
-    read -p "After you say "hi" to the mccm bot press <enter>."; echo
+    read -p "After you say "hi" to the cncm bot press <enter>."; echo
     else TELEGRAM_USER=''
 fi
 if ( echo $TELEGRAM_USER | grep -qi [A-Za-z0-9] ) 
@@ -251,8 +237,8 @@ fi
 #### check that there is at least one valid alerting mechanism ####
 if ! ( [[ $EMAIL_USER =~ [\@] ]] || [[ $TELEGRAM_USER =~ [a-zA-Z0-9] ]] )
 then
-  logger "MCCM requires either email or telegram for alerting, bailing out of setup."  
-  echo "MCCM requires either email or telegram for alerting. Rerun setup to provide email or telegram alerting.Bailing out."
+  logger "CNCM requires either email or telegram for alerting, bailing out of setup."  
+  echo "CNCM requires either email or telegram for alerting. Rerun setup to provide email or telegram alerting.Bailing out."
   exit
 fi
 
@@ -261,10 +247,10 @@ fi
 ###############################
 
 #### register with truestaking alert server ####
-API="$('/usr/bin/curl' -s -X POST -H 'Content-Type: application/json' -d '{"chain": "movr", "name": "'$NAME'", "address": "'$COLLATOR_ADDRESS'", "telegram_username": "'$TELEGRAM_USER'", "email_username": "'$EMAIL_USER'", "monitor": {"process": "'$MONITOR_PROCESS'", "nvme_heat": '$MONITOR_NVME_HEAT', "nvme_lifespan": '$MONITOR_NVME_LIFESPAN', "nvme_selftest": '$MONITOR_NVME_SELFTEST', "drive_space": '$MONITOR_DRIVE_SPACE', "cpu": '$MONITOR_CPU', "producing_blocks": '$MONITOR_PRODUCING_BLOCKS', "oom_condition": '$MONITOR_OOM_CONDITION'}}' https://monitor.truestaking.com/register)"
+API="$('/usr/bin/curl' -s -X POST -H 'Content-Type: application/json' -d '{"chain": "ada", "name": "'$NAME'", "telegram_username": "'$TELEGRAM_USER'", "email_username": "'$EMAIL_USER'", "monitor": {"process": "'$MONITOR_PROCESS'", "nvme_heat": '$MONITOR_NVME_HEAT', "nvme_lifespan": '$MONITOR_NVME_LIFESPAN', "nvme_selftest": '$MONITOR_NVME_SELFTEST', "drive_space": '$MONITOR_DRIVE_SPACE', "cpu": '$MONITOR_CPU', "oom_condition": '$MONITOR_OOM_CONDITION'}}' https://monitor.truestaking.com/register)"
 if ! [[ $API =~ "OK" ]]
 then
-  logger "MCCM failed to obtain API KEY"
+  logger "CNCM failed to obtain API KEY"
 	echo
   echo $API
   echo
@@ -277,15 +263,15 @@ sudo mkdir -p $DEST 2>&1 >/dev/null
 write_env
 
 echo
-echo "installing mccm.service"
-## curl mccm.service
-sudo curl $REPO/mccm.service -O 
-sudo mv ./mccm.service /etc/systemd/system/mccm.service
-sudo systemctl enable mccm.service
-echo "installing mccm.timer"
-## curl mccm.timer
-sudo curl $REPO/mccm.timer -O
-sudo mv ./mccm.timer /etc/systemd/system/mccm.timer
+echo "installing cncm.service"
+## curl cncm.service
+sudo curl $REPO/cncm.service -O 
+sudo mv ./cncm.service /etc/systemd/system/cncm.service
+sudo systemctl enable cncm.service
+echo "installing cncm.timer"
+## curl cncm.timer
+sudo curl $REPO/cncm.timer -O
+sudo mv ./cncm.timer /etc/systemd/system/cncm.timer
 ## curl monitor.sh
 sudo curl $REPO/monitor.sh -O
 sudo mv ./monitor.sh $DEST/
@@ -299,16 +285,16 @@ sudo curl $REPO/update_monitor.sh -O
 sudo mv ./update_monitor.sh $DEST/
 sudo chmod +x $DEST/update_monitor.sh
 echo
-echo "Starting mccm service"
-sudo systemctl enable mccm.timer
-sudo systemctl start mccm.timer
+echo "Starting cncm service"
+sudo systemctl enable cncm.timer
+sudo systemctl start cncm.timer
 echo
 echo "You can update your preferences or stop monitoring and alerts at anytime by running update_monitor.sh"
 echo ; echo
 echo "you will get a summary of your configuration and registration shortly via email or TG."
 echo; echo
 echo "##########################################"
-echo "In MCCM, every server has a unique API key."
+echo "In CNCM, every server has a unique API key."
 echo "Here is the API key for this server: $API_KEY"
 echo "You can also find it in $DEST/env"
 echo "WARNING: you need this key to update or remove this account, so please store it safely!"

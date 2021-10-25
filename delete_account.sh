@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DEST='/opt/moonbeam/mccm'
+DEST='/opt/cardano/cncm'
 cd $DEST
 
 ################################
@@ -32,25 +32,25 @@ get_answer() {
 
 echo; echo
 
-echo "If you wish to temporarily pause MCCM alerting, please use update_monitor.sh"
+echo "If you wish to temporarily pause CNCM alerting, please use update_monitor.sh"
 echo
 
-echo "In MCCM, every server has a unique API KEY. If you continue with this script, it will remove the server account completely and delete the MCCM installation."
+echo "In CNCM, every server has a unique API KEY. If you continue with this script, it will remove the server account completely and delete the CNCM installation."
 echo
 
-if ! get_answer "Do you wish to continue and remove the server account and MCCM installation?"
+if ! get_answer "Do you wish to continue and remove the server account and CNCM installation?"
 then echo; exit;
 fi
 echo
 
 if [ ! -f $DEST/env ]
   then
-  echo "Cannot find MCCM config file!"
+  echo "Cannot find CNCM config file!"
   API_KEY=$(get_input "please enter the server API KEY" );
   echo
   if ! [[ $API_KEY =~ [a-z] ]]
   then
-    echo "We do not have a valid API key. Contact TrueStaking via discord or TG."
+    echo "We do not have a valid API key. Contact TrueStaking via discord or TG: @samarvin"
     exit;
   fi
 else
@@ -63,14 +63,14 @@ if get_answer "Do you want to remove server account $API_KEY? "
   RESP="$('/usr/bin/curl' -s -X POST -H 'Content-Type: application/json' -H 'Authorization: Bearer '$API_KEY'' -d '{}' https://monitor.truestaking.com/delete_account)"
   if [[ $RESP =~ "OK" ]]
     then
-      sudo systemctl stop mccm.timer
-      sudo systemctl disable mccm.timer
-      sudo systemctl stop mccm.service
-      sudo systemctl disable mccm.service
-      sudo rm /etc/systemd/system/mccm.timer
-      sudo rm /etc/systemd/system/mccm.service
-      sudo rm -rf /opt/moonbeam/mccm
-      echo "Successs! MCCM account has been removed and the installation removed. "
+      sudo systemctl stop cncm.timer
+      sudo systemctl disable cncm.timer
+      sudo systemctl stop cncm.service
+      sudo systemctl disable cncm.service
+      sudo rm /etc/systemd/system/cncm.timer
+      sudo rm /etc/systemd/system/cncm.service
+      sudo rm -rf /opt/moonbeam/cncm
+      echo "Successs! CNCM account has been removed and the installation removed. "
     else
         echo "error was: $RESP"
         exit; exit
