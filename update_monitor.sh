@@ -71,7 +71,7 @@ MONITOR_NVME_SELFTEST=$MONITOR_NVME_SELFTEST
 EMAIL_USER=$EMAIL_USER
 TELEGRAM_USER=$TELEGRAM_USER
 ACTIVE=$ACTIVE
-" | sudo dd of=$DEST/env
+" | sudo dd of=$DEST/env status=none
 }
 
 ####################################
