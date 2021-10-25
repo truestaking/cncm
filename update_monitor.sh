@@ -28,6 +28,26 @@ get_answer() {
   done
 }
 
+generate_data(){
+cat << EOF
+{
+"chain": "ada",
+"name": "$NAME",
+"telegram_username": "$TELEGRAM_USER",
+"email_username": "$EMAIL_USER",
+"monitor": {
+  "process": "$MONITOR_PROCESS",
+  "cpu": "$MONITOR_CPU",
+  "nvme_heat": "$MONITOR_NVME_HEAT",
+  "nvme_lifespan": "$MONITOR_NVME_LIFESPAN",
+  "nvme_selftest": "$MONITOR_NVME_SELFTEST",
+  "drive_space": "$MONITOR_DRIVE_SPACE",
+  "oom_condition": "$MONITOR_OOM_CONDITION"
+  }
+}
+EOF
+}
+
 write_env() {
   echo -ne "
 ##### CNCM user variables #####
@@ -40,7 +60,7 @@ write_env() {
 #### TO EDIT THESE VARIABLES, RUN update_monitor.sh ####
 #### DO NOT COPY THIS FILE or edit the API KEY ####
 API_KEY=$API_KEY
-NAME=$NAME
+NAME='$NAME'
 MONITOR_PROCESS=$MONITOR_PROCESS
 MONITOR_CPU=$MONITOR_CPU
 MONITOR_OOM_CONDITION=$MONITOR_OOM_CONDITION
@@ -292,7 +312,7 @@ fi
 ###############################
 
 ##### update truestaking alert server #####
-RESP="$('/usr/bin/curl' -s -X POST -H 'Content-Type: application/json' -H 'Authorization: Bearer '$API_KEY'' -d '{"chain": "ada", "telegram_username": "'$TELEGRAM_USER'", "email_username": "'$EMAIL_USER'", "monitor": {"process": "'$MONITOR_PROCESS'", "nvme_heat": '$MONITOR_NVME_HEAT', "nvme_lifespan": '$MONITOR_NVME_LIFESPAN', "nvme_selftest": '$MONITOR_NVME_SELFTEST', "drive_space": '$MONITOR_DRIVE_SPACE', "cpu": '$MONITOR_CPU', "oom_condition": '$MONITOR_OOM_CONDITION'}}' https://monitor.truestaking.com/update)"
+RESP="$('/usr/bin/curl' -s -X POST -H 'Content-Type: application/json' -H 'Authorization: Bearer '$API_KEY'' -d "$(generate_data)" https://monitor.truestaking.com/update)"
 if ! [[ $RESP =~ "OK" ]]
 then 
     echo "We encountered an error: $RESP "
