@@ -1,5 +1,7 @@
 # Cardano Node Community Monitoring
-brought to you by [True Staking](https://truestaking.com)
+Brought to you by [True Staking](https://truestaking.com)
+
+Please feel free to ask us anything in our [telegram](https://t.me/truestakingcardano)
 
 ## What is it?
 
