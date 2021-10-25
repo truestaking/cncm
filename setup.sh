@@ -225,7 +225,7 @@ TELEGRAM_USER="";
 if get_answer "Do you want to receive node alerts via Telegram?"
     then echo;
     TELEGRAM_USER=$(get_input "Please enter your telegram username ")
-    echo "IMPORTANT: Please enter a telegram chat with our bot and message 'hi!' LINK: https://t.me/cardanoncncm_bot"
+    echo "IMPORTANT: Please enter a telegram chat with our bot and message 'hi!' LINK: https://t.me/cardanocncm_bot"
     echo "IMPORTANT: Even if you have messaged our bot before, you must message him again"
     read -p "After you say "hi" to the cncm bot press <enter>."; echo
     else TELEGRAM_USER=''
